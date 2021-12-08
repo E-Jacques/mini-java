@@ -1,0 +1,174 @@
+package syntax;
+import syntax.ast.*;
+import main.EnumOper;
+import main.EnumType;
+
+action code {:
+/* Classes utilitaires pour construction de paires de listes */
+  class KlassBody { /* classBody = (Var|Method)*  */
+    AstList<Var> vars;     AstList<Method> methods;
+    KlassBody() {this.vars=new AstList<>(); this.methods=new AstList<>(); }
+  }
+  class MethBody  { /* methodBody = (Var|Stmt)*  */
+    AstList<Var> vars;     AstList<Stmt> stmts;
+    MethBody()  {this.vars=new AstList<>(); this.stmts=new AstList<>(); }
+  }
+:};
+
+/* Lexèmes (tokens) */
+terminal KLASS, MAIN, OUT, PRINTLN, PUBLIC, STATIC, STRING, SYSTEM, VOID, EXTENDS, RETURN, NEW, THIS_TOKEN, IF, ELSE, WHILE, LENGTH ;
+terminal INT, BOOLEAN ;
+terminal DOT, SEMI, LB, RB, LC, RC, LP, RP, COMMA ;
+terminal AND, LESS, PLUS, MINUS, TIMES, EQUAL, NOT ;
+/* Lexèmes avec valeur sémantique */
+terminal Boolean LIT_BOOL ;
+terminal Integer LIT_INT ;
+terminal String  IDENT ;
+/* Variables et Arbre de syntaxe */
+nonterminal Axiom               axiom;
+nonterminal KlassMain           klassMain;
+nonterminal Ident               ident;
+nonterminal AstList<Klass>      klassList;
+nonterminal Stmt                stmt; 
+nonterminal Expr                expr;
+nonterminal Klass               klass;
+nonterminal Ident               parent;
+nonterminal KlassBody           klassBody;
+nonterminal Method              method;
+nonterminal Type                varType;
+nonterminal AstList<Formal>     formalArgs;
+nonterminal MethBody            methodBody;
+nonterminal AstList<Expr>       args;
+nonterminal Var                 variable;
+
+precedence right EQUAL;
+precedence left AND ;
+precedence left LESS ;
+precedence left PLUS, MINUS ;
+precedence left TIMES ;
+precedence right NOT ;
+precedence left DOT, LP, RP, LB, RB ;
+
+/*  Productions */
+axiom     ::= klassMain:a klassList:z
+                  {: RESULT = new Axiom(a, z);  :}
+;
+klassMain ::= KLASS ident:b LC
+                PUBLIC STATIC VOID MAIN LP STRING LB RB ident:c RP LC
+                  stmt:d
+                RC
+              RC
+                  {: RESULT = new KlassMain(b, c, d); :}
+;
+ident     ::= IDENT:a
+                  {: RESULT = new Ident(a); :}
+;
+klassList ::= /* vide */
+                  {: RESULT = new AstList<Klass>();            :}
+          | klassList:kl  klass:k
+                  {: kl.add(k); RESULT = kl;   :}
+;
+klass     ::= KLASS ident:i parent:p LC klassBody:kb RC
+                  {: RESULT = new Klass(i, p, kb.vars, kb.methods); :}
+;
+klassBody ::= /* mot vide */ 
+                  {: RESULT = new KlassBody(); :}
+          | klassBody:kb method:m          
+                  {: RESULT = kb; RESULT.methods.add(m); :}
+          | klassBody:kb variable:v
+                  {: RESULT = kb; RESULT.vars.add(v); :}
+;
+
+variable  ::= varType:t ident:i SEMI
+                  {: RESULT = new Var(t, i); :}
+;
+method    ::= PUBLIC varType:t ident:i LP formalArgs:fa RP LC methodBody:mb RETURN expr:e SEMI RC
+                  {: RESULT = new Method(t, i, fa, mb.vars, mb.stmts, e); :}
+;
+methodBody::= /* mot vide */ 
+                  {: RESULT = new MethBody(); :}
+          |   methodBody:mb variable:v
+                  {: RESULT = mb; RESULT.vars.add(v); :}
+          |   methodBody:mb stmt:s
+                  {: RESULT = mb; RESULT.stmts.add(s); :}
+;
+varType   ::= ident:i
+                  {: RESULT = new Type(i.name); :}
+          | INT
+                  {: RESULT = new Type(EnumType.INT); :}
+          | BOOLEAN   
+                  {: RESULT = new Type(EnumType.BOOL); :}
+          | INT LB RB
+                  {: RESULT = new Type(EnumType.INT_ARRAY); :}
+          | BOOLEAN LB RB
+                  {: RESULT = new Type(EnumType.BOOL_ARRAY); :}
+;
+formalArgs::= /* mot vide */
+                  {: RESULT = new AstList<Formal>(); :}
+          |   varType:t ident:i
+                  {: RESULT = new AstList<Formal>(new Formal(t, i)); :}
+          |   formalArgs:fa COMMA varType:t ident:i
+                  {: RESULT = fa; fa.add(new Formal(t, i)); :}
+;
+parent    ::= /* mot vide */ 
+                  {: RESULT = new Ident("Object"); :}
+          |   EXTENDS ident:i 
+                  {: RESULT = i; :}
+;
+args      ::= /* mot vide */
+                  {: RESULT = new AstList<Expr>(); :}
+          |   expr:e
+                  {: RESULT = new AstList<Expr>(e); :}
+          |   args:a COMMA expr:e
+                  {: RESULT = a; a.add(e); :}
+;
+// Instructions
+stmt      ::= SYSTEM:a DOT OUT DOT PRINTLN LP expr:b RP SEMI:z
+                  {: RESULT = new StmtPrint(b); :}
+          |   ident:i EQUAL expr:e SEMI
+                  {: RESULT = new StmtAssign(i, e); :}
+          |   LC methodBody:mb RC
+                  {: RESULT = new StmtBlock(mb.vars, mb.stmts); :}
+          |   IF LP expr:e RP stmt:s1 ELSE stmt:s2
+                  {: RESULT = new StmtIf(e, s1, s2); :}
+          |   WHILE LP expr:e RP stmt:s
+                  {: RESULT = new StmtWhile(e, s); :}
+          |   ident:i LB expr:e1 RB EQUAL expr:e2 SEMI
+                  {: RESULT = new StmtArrayAssign(i, e1, e2); :}
+;
+// Expressions
+expr      ::= LIT_INT:a
+                  {: RESULT = new ExprLiteralInt(a); :}
+          |   LIT_BOOL:b
+                  {: RESULT = new ExprLiteralBool(b); :}
+          |   LP expr:e RP
+                  {: RESULT=e; :}
+          |   expr:e1 AND expr:e2
+                  {: RESULT = new ExprOpBin(e1, EnumOper.AND, e2); :}
+          |   expr:e1 PLUS expr:e2
+                  {: RESULT = new ExprOpBin(e1, EnumOper.PLUS, e2); :}
+          |   expr:e1 LESS expr:e2
+                  {: RESULT = new ExprOpBin(e1, EnumOper.LESS, e2); :}
+          |   expr:e1 MINUS expr:e2
+                  {: RESULT = new ExprOpBin(e1, EnumOper.MINUS, e2); :}
+          |   expr:e1 TIMES expr:e2
+                  {: RESULT = new ExprOpBin(e1, EnumOper.TIMES, e2); :}
+          |   expr:e DOT ident:i LP args:a RP
+                  {: RESULT = new ExprCall(e, i, a); :}
+          |   NEW ident:i LP RP
+                  {: RESULT = new ExprNew(i); :}
+          |   ident:i
+                  {: RESULT = new ExprIdent(i); :}
+          |   THIS_TOKEN
+                  {: RESULT = new ExprIdent(new Ident("this")); :}
+          |   NOT expr:e
+                  {: RESULT = new ExprOpUn(EnumOper.NOT, e); :}
+          |   expr:e1 LB expr:e2 RB
+                  {: RESULT = new ExprArrayLookup(e1, e2); :}
+          |   expr:e1 DOT LENGTH
+                  {: RESULT = new ExprArrayLength(e1);    :}
+          |   NEW INT LB expr:e RB
+                  {: RESULT = new ExprArrayNew(e, EnumType.INT_ARRAY); :}
+          |   NEW BOOLEAN LB expr:e RB
+                  {: RESULT = new ExprArrayNew(e, EnumType.BOOL_ARRAY);  :}     
+;

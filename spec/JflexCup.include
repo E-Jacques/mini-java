@@ -1,0 +1,44 @@
+/* Options for Jflex + Cup interaction
+Usage :  add "%include .." after first "%%" in /jflex file
+   Jflex Alone    :    %include Jflex.include
+   Jflex with Cup :    %include Jflex.include
+                       %include JflexCup.include
+*/
+
+// Implements Scanner class <=> lexer function = "Symbol next_token()"
+%cup
+
+// Use CUP generated tokens in sym.java 
+%extends sym
+// %implements sym , if "cup -interface"
+
+// Generate token for EOF
+%eofval{
+  return TOKEN(EOF);
+%eofval}
+
+%{
+// Add optionnal SymbolFactory in Lexer class
+java_cup.runtime.SymbolFactory sf;
+public Yylex(java.io.Reader in,java_cup.runtime.SymbolFactory sf)
+       { this(in); this.sf = sf; }
+
+// Generate values to be returned by next_token()
+////  Symbol TOKEN ( int code , Objext value)  // code from class sym
+////  Symbol TOKEN ( int code ) == TOKEN (code , yytext () )
+java_cup.runtime.Symbol TOKEN(int code) { return TOKEN(code, yytext()); } 
+java_cup.runtime.Symbol TOKEN(int code, Object value){
+  int yycar=(int)yychar; /* adaptation jflex1.8.2 */
+  if (sf instanceof java_cup.runtime.ComplexSymbolFactory)
+    return ((java_cup.runtime.ComplexSymbolFactory)sf).newSymbol(
+           terminalNames[code], code,
+           new java_cup.runtime.ComplexSymbolFactory.Location
+               ("", yyline+1, yycolumn+1, yycar),
+           new java_cup.runtime.ComplexSymbolFactory.Location
+               ("", yyline+1, yycolumn+1+yylength(), yycar+yylength()),
+           value
+           ) ;
+  else // sf = null or sf instanceof DefaultSymbolFactory 
+    return new java_cup.runtime.Symbol(code, yycar, yycar+yylength(), value);
+}
+%}

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Compilation" default="generate" basedir="." >
+
+<property name="propfile" value="build.properties" />
+<property file="${propfile}" />
+<property name="NAME"     value="undef" />
+<property name="CUPOPT"   value="-locations" />
+<property name="PKG"      value="" />
+<property name="MAIN"     value="CupParse" />
+<property name="ARGS"     value="" />
+<property name="JARFILE"  value="Run.jar" />
+
+<property name="SRCJFLEX" value="${NAME}.jflex" />
+<property name="SRCCUP"   value="${NAME}.cup" />
+<description>
+  Génération Analyseur syntaxique JFlex + CUP
+
+Propriétés surchargeables avec "ant-Dname=value" ou fichier "${propfile}" :
+    Nom      Description || valeur défaut || valeur courante
+    NAME     Nom de base des specs (NAME.jflex et NAME.cup) || undef || ${NAME}
+    CUPOPT   Options supplémentaires pour CUP || || ${CUPOPT}
+    PKG      Package Java des classes Yylex, parser et sym || || ${PKG}
+    MAIN     Nom de la Classe main() || CupParse || ${MAIN}
+    ARGS     Arguments du main() || || ${ARGS}
+    JARFILE  Jar exécutable du MAIN || Run.jar || ${JARFILE}
+</description>
+
+<property name="lib"      value="lib" />
+<property name="src"      value="src" />
+<property name="bin"      value="bin" />
+<property name="dest"     value="${src}/${PKG}" />
+<property name="libJflex" value="${lib}/jflex.jar" />
+<property name="libCup"   value="${lib}/java-cup.jar" />
+<property name="libRT"    value="${lib}/java-cup-runtime.jar" />
+<property name="classpath" value="${bin}:${libRT}" />
+
+<target name="jflex" description="Generation JFlex (.jflex -> Yylex.java)" >
+  <available file="${SRCJFLEX}" property="jflexok" />
+  <fail unless="jflexok" message="${SRCJFLEX} missing" />
+  <java jar="${libJflex}" fork="true" >
+    <arg line="-d ${dest} -nobak ${SRCJFLEX}" />
+  </java>
+</target>
+
+<target name="cup" description="Generation CUP(.cup -> parser.java + sym.java)" >
+  <available file="${SRCCUP}" property="cupok" />
+  <fail unless="cupok" message="${SRCCUP} missing" />
+  <java jar="${libCup}" fork="true" >
+    <arg line="-destdir ${dest} ${CUPOPT} ${SRCCUP}" />
+  </java>
+</target>
+
+<target name="generate" depends="jflex,cup" description="jflex + cup" />
+
+<target name="compile" description="Compilation Java">
+  <mkdir dir="${bin}" />
+  <javac includeantruntime="false" debug="true" encoding="UTF-8"
+         srcdir="${src}"
+         destdir="${bin}"
+         classpath="${classpath}" 
+         />
+</target>
+
+<target name="run" depends="compile" description="Execution Main()" >
+  <echo>Running JavaClass ${MAIN} with CLASSPATH=${classpath}}, args[]=${ARGS}</echo>
+  <java classname="${MAIN}" fork="true" classpath="${classpath}" >   <arg line="${ARGS}" />  </java>
+</target>
+
+<target name="jar" depends="compile" description="Generation jar executable" >
+  <jar jarfile="${JARFILE}" basedir="${bin}">
+    <manifest>  <attribute name="Main-Class" value="${MAIN}" />  </manifest>
+    <zipfileset includes="**/*.class" src="${libRT}"/>
+  </jar>
+</target>
+
+<target name="runjar"  depends="jar" description="Execution a partir du jar" >
+  <echo>Running java -jar Run.jar args[]=${ARGS}</echo>
+  <java jar="${JARFILE}" fork="true" >   <arg line="${ARGS}" />  </java>
+</target>
+
+<target name="clean" description="Clean generated files">
+  <delete dir="${bin}" />
+  <delete file="${JARFILE}" />
+  <delete file="${dest}/Yylex.java" />
+  <delete file="${dest}/sym.java" />
+  <delete file="${dest}/parser.java" />
+</target>
+
+</project>
