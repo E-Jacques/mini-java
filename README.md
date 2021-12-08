@@ -4,13 +4,7 @@ Compilateur du langage Minijava de  Andrew J. Appel, "Modern Compiler Implément
 
 Code en Java avec utilisation de JFlex et CUP.
 
-Outillage : Make ou Ant, Eclipse (ou Intellij).
-
-- Auteur : Pascal Hennequin
-- Version : 2021
-- sous-version : Start
-- Site du Cours : CSC4536  
-  <http://www-inf.telecom-sudparis.eu/COURS/CSC4536/web/> 
+Sur la base du cours CSC4536 de Pascal Hennequin
 
 # Version "Start"
 Version de départ fournie aux élèves pour le projet Minijava.
