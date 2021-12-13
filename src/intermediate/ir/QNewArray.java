@@ -11,6 +11,7 @@ public class QNewArray extends IRquadruple {
   public QNewArray(final IRvariable arg1, final IRvariable arg2,
       final IRvariable result) {
     super(null, arg1, arg2, result);
+    
   }
 
   public void accept(final IRvisitor v) { v.visit(this); }

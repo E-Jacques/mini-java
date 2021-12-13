@@ -243,7 +243,7 @@ public class Intermediate extends AstVisitorDefault {
   @Override
   public void visit(final Method n) {
     currentMethod = n.methodId.name;
-    add(new QLabel(newLabel(currentMethod)));
+    add(new QLabelMeth(newLabel(currentMethod)));
     defaultVisit(n);
     add(new QReturn(getVar(n.returnExp)));
     currentMethod = null;

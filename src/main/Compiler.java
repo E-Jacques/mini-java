@@ -19,11 +19,11 @@ public class Compiler {
 
       Debug.log("=== Génération de la Représentation Intermédiaire ===");
       final intermediate.IR ir = new intermediate.Intermediate(st).getResult();
+      // Debug.toBeContinued();
       
-      Debug.toBeContinued();
       Debug.log("=== Génération de Code ===");
       final String outfile = new codegen.CodeGen(ir, infile).getResult();
-
+      
       if (Debug.RUNMARS) { // may be not here
         Debug.log("== Exécution Mars de " + outfile + " ===");
         execCmd("java", "-jar", "lib/mars.jar", "nc", outfile);

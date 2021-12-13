@@ -23,9 +23,9 @@ public final class Debug {
   /** Impression de la forme intermédiaire. */
   public static final boolean INTERMED = true;
   /** Dump de l'allocation Mémoire. */
-  public static final boolean ALLOCATOR = false;
+  public static final boolean ALLOCATOR = true;
   /** Exécution avec Mars du résultat de la compilation. */
-  public static final boolean RUNMARS = false;
+  public static final boolean RUNMARS = true;
 
   public static final boolean TESTINDENT = false;
   public static final boolean TESTSCOPE = false;
