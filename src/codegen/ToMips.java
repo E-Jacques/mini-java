@@ -178,7 +178,7 @@ public class ToMips extends IRvisitorDefault {
       throw new main.CompilerException("ToMips : Params error");
     }
     if (nbArg > NBARGS) {
-      throw new main.CompilerException("ToMips : too many args " + function);
+      throw new main.CompilerException("ToMips : too many args for " + function);
     }
     switch (function) {
       case "_system_exit":
@@ -258,7 +258,7 @@ public class ToMips extends IRvisitorDefault {
       throw new main.CompilerException("ToMips : Params error");
     }
     if (nbArg > NBARGS) {
-      throw new main.CompilerException("ToMips : too many args " + methodName);
+      throw new main.CompilerException("ToMips : too many args for " + methodName);
     }
     
     this.callerSave();
