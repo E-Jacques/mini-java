@@ -241,7 +241,7 @@ public class ToMips extends IRvisitorDefault {
   public void visit(QNew q) {
     push(Reg.A0);
 
-    String klassName =((IRlabel) q.arg1).getName();
+    String klassName = ((IRlabel) q.arg1).getName();
     Integer classSize = allocator.classSize(klassName);
     mw.load(Reg.A0, classSize);
     mw.jumpIn("_new_object");
@@ -252,27 +252,32 @@ public class ToMips extends IRvisitorDefault {
   @Override
   public void visit(final QCall q) {
     String methodName = ((IRlabel) q.arg1).getName();
-    int nbArg = ((IRconst) q.arg2).getValue() ;
-    
+    int nbArg = ((IRconst) q.arg2).getValue();
+
     if (nbArg != params.size()) {
       throw new main.CompilerException("ToMips : Params error");
     }
     if (nbArg > NBARGS) {
       throw new main.CompilerException("ToMips : too many args for " + methodName);
     }
-    
+
+    int frameSize = allocator.frameSize(methodName);
+
     this.callerSave();
     for (int i = 0; i < nbArg; i++) {
       this.regLoadSaved(AREGS[i], params.get(i));
     }
-    
-    mw.jumpIn(methodName);
+
+    mw.move(Reg.FP, Reg.SP);
+    mw.plus(Reg.SP, -frameSize);
+    mw.jumpIn(methodName + "_" + frameSize);
+    mw.move(Reg.SP, Reg.FP);
+
     this.callerRestore();
     this.regStore(Reg.V0, q.result);
 
     params.clear();
   }
-
 
   @Override
   public void visit(final QReturn q) {
@@ -284,12 +289,13 @@ public class ToMips extends IRvisitorDefault {
   @Override
   public void visit(final QLabelMeth q) {
     String methodName = ((IRlabel) q.arg1).getName();
-    mw.label(methodName);
+    int frameSize = allocator.frameSize(methodName);
+    mw.label(methodName + "_" + frameSize);
     this.calleeIn();
   }
 
   @Override
-  public void visit (final QJumpCond q) {
+  public void visit(final QJumpCond q) {
     this.regLoad(Reg.V0, q.arg2);
     mw.jumpIfNot(Reg.V0, q.arg1.getName());
   }
@@ -304,25 +310,25 @@ public class ToMips extends IRvisitorDefault {
     if (q.op == main.EnumOper.NOT) {
       this.regLoad(Reg.V0, q.arg1);
       mw.not(Reg.V0);
-    } 
+    }
 
     this.regStore(Reg.V0, q.result);
   }
 
   @Override
-  public void visit (final QCopy q) {
+  public void visit(final QCopy q) {
     this.regLoad(Reg.V0, q.arg1);
     this.regStore(Reg.V0, q.result);
   }
 
   @Override
-  public void visit (final QAssignArrayFrom q) {
+  public void visit(final QAssignArrayFrom q) {
     push(Reg.T0, Reg.T1);
 
     this.regLoad(Reg.T0, q.arg1);
     this.regLoad(Reg.T1, q.arg2);
 
-    mw.fois4(Reg.T1); // 4 * i
+    mw.fois4(Reg.T1);
     mw.plus(Reg.T0, Reg.T1);
 
     mw.loadOffset(Reg.V0, 4, Reg.T0);
@@ -332,7 +338,7 @@ public class ToMips extends IRvisitorDefault {
   }
 
   @Override
-  public void visit (final QAssignArrayTo q) {
+  public void visit(final QAssignArrayTo q) {
     push(Reg.T0, Reg.T1);
 
     this.regLoad(Reg.T0, q.result);
@@ -347,8 +353,8 @@ public class ToMips extends IRvisitorDefault {
     pop(Reg.T0, Reg.T1);
   }
 
-  @Override 
-  public void visit (final QNewArray q) {
+  @Override
+  public void visit(final QNewArray q) {
     push(Reg.A0);
 
     this.regLoad(Reg.A0, q.arg2);
@@ -357,13 +363,12 @@ public class ToMips extends IRvisitorDefault {
 
     mw.jumpIn("_new_object");
     this.regStore(Reg.V0, q.result);
-    this.regLoad(Reg.V0, q.arg2);
 
     pop(Reg.A0);
   }
 
   @Override
-  public void visit (final QLength q) {
+  public void visit(final QLength q) {
     push(Reg.T0);
 
     this.regLoad(Reg.T0, q.arg1);
