@@ -261,16 +261,15 @@ public class ToMips extends IRvisitorDefault {
       throw new main.CompilerException("ToMips : too many args for " + methodName);
     }
 
-    int frameSize = allocator.frameSize(methodName);
-
+    
     this.callerSave();
     for (int i = 0; i < nbArg; i++) {
       this.regLoadSaved(AREGS[i], params.get(i));
     }
-
+    
     mw.move(Reg.FP, Reg.SP);
-    mw.plus(Reg.SP, -frameSize);
-    mw.jumpIn(methodName + "_" + frameSize);
+    mw.plus(Reg.SP, -allocator.frameSize(methodName));
+    mw.jumpIn(methodName);
     mw.move(Reg.SP, Reg.FP);
 
     this.callerRestore();
@@ -289,8 +288,7 @@ public class ToMips extends IRvisitorDefault {
   @Override
   public void visit(final QLabelMeth q) {
     String methodName = ((IRlabel) q.arg1).getName();
-    int frameSize = allocator.frameSize(methodName);
-    mw.label(methodName + "_" + frameSize);
+    mw.label(methodName);
     this.calleeIn();
   }
 

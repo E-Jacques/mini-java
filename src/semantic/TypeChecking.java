@@ -276,7 +276,7 @@ public class TypeChecking extends AstVisitorDefault {
     InfoKlass ik = this.semanticTree.rootScope.lookupKlass(getType(n.receiver));
     InfoMethod m = ik.getScope().lookupMethod(n.methodId.name);
     if (m == null) {
-      erreur(n, "Method '" + n.methodId.name + "' not found in ");
+      erreur(n, "Method '" + n.methodId.name + "' not found");
     }
 
     int idx = 1;

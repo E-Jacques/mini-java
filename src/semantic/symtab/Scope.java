@@ -71,6 +71,10 @@ public class Scope {
     return v;
   }
 
+  public String getScopeName () {
+    return this.scopeName;
+  }
+
   /** Insert variable.
    * @param v L'information ajoutée
    * @return L'information précédente si déjà existante */

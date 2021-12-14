@@ -24,7 +24,8 @@ public class CodeGen {
     final Allocator allocator = new Allocator(ir);
 
     Debug.log("= Traduction IR to MIPS -> " + outfile);
-    new ToMips(ir, allocator, mipsWriter);
+    new ToMipsPlus(ir, allocator, mipsWriter);
+    
 
     Debug.log("= Édition de lien : " + outfile + " -> " + outfile);
     new LinkRuntime(mipsWriter);

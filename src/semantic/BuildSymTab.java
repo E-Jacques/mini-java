@@ -134,7 +134,6 @@ public class BuildSymTab extends AstVisitorDefault {
   @Override
   public void defaultVisit(final AstNode n) {
     setScope(n, currentScope);
-    System.out.println(n);
     for (AstNode f : n)
       f.accept(this);
     currentScope = getScope(n);
@@ -196,6 +195,7 @@ public class BuildSymTab extends AstVisitorDefault {
     }
 
     n.returnExp.accept(this);
+    this.currentScope = getScope(n);
   }
 
   // Visites Spécifiques : (non defaultVisit)

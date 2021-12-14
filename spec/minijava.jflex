@@ -53,7 +53,7 @@ Ident      = [:jletter:] [:jletterdigit:]*
 "("       { return TOKEN(LP);      }
 ")"       { return TOKEN(RP);      }
 //// literals, identificateur
-{Bool}    { return TOKEN(LIT_BOOL,        new Boolean((yytext() == "true")));}
+{Bool}    { return TOKEN(LIT_BOOL,        yytext());}
 {Integer} { return TOKEN(LIT_INT,   Integer.parseInt(yytext()));      }  
 {Ident}   { return TOKEN(IDENT,     new String(yytext())) ;           }
 //// Ignore 

@@ -1251,7 +1251,7 @@ java_cup.runtime.Symbol TOKEN(int code, Object value){
             // fall through
           case 67: break;
           case 28:
-            { return TOKEN(LIT_BOOL,        new Boolean((yytext() == "true")));
+            { return TOKEN(LIT_BOOL,        yytext());
             }
             // fall through
           case 68: break;

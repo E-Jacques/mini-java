@@ -11,17 +11,17 @@ public final class Debug {
   /** Trace d’exécution de l'automate LR. */
   public static final boolean PARSE = false;
   /** Impression de l'AST. */
-  public static final boolean TREE = true;
+  public static final boolean TREE = false;
   /** Ajout des "Locations" dans l'impression de l'AST. */
   public static final boolean TREELOCATION = false;
   /** PrettyPrint minijava par visite de l'AST. */
   public static final boolean PRETTY = false;
   /** Impression de la table des symboles. */
-  public static final boolean SYMTAB = true;
+  public static final boolean SYMTAB = false;
   /** Impression des Variables non utilisées. */
   public static final boolean UNUSED = false;
   /** Impression de la forme intermédiaire. */
-  public static final boolean INTERMED = true;
+  public static final boolean INTERMED = false;
   /** Dump de l'allocation Mémoire. */
   public static final boolean ALLOCATOR = true;
   /** Exécution avec Mars du résultat de la compilation. */

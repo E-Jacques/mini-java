@@ -21,7 +21,7 @@ terminal INT, BOOLEAN ;
 terminal DOT, SEMI, LB, RB, LC, RC, LP, RP, COMMA ;
 terminal AND, LESS, PLUS, MINUS, TIMES, EQUAL, NOT ;
 /* Lexèmes avec valeur sémantique */
-terminal Boolean LIT_BOOL ;
+terminal String LIT_BOOL ;
 terminal Integer LIT_INT ;
 terminal String  IDENT ;
 /* Variables et Arbre de syntaxe */
