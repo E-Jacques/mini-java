@@ -29,6 +29,16 @@ public class ToMipsPlus extends ToMips {
     }
 
     @Override
+    public void visit(final QAssignUnary q) {
+        if (q.op == main.EnumOper.NOT) {
+            Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
+            mw.not(r);
+        }
+
+        this.regStore(Reg.V0, q.result);
+    }
+
+    @Override
     public void visit(QAssign q) {
         Reg r0 = tmpRegLoad(q.arg1, Reg.V0);
         Reg r1 = tmpRegLoad(q.arg2, Reg.V1);
