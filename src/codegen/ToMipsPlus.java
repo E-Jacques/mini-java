@@ -30,12 +30,34 @@ public class ToMipsPlus extends ToMips {
 
     @Override
     public void visit(final QAssignUnary q) {
+        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
         if (q.op == main.EnumOper.NOT) {
-            Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
             mw.not(r);
         }
 
-        this.regStore(Reg.V0, q.result);
+        this.regStore(r, q.result);
+    }
+
+    @Override
+    public void visit(final QAssignArrayTo q) {
+        push(Reg.T0, Reg.T1);
+
+        Reg r0 = this.tmpRegLoad(q.result, Reg.T0);
+        Reg r1 = this.tmpRegLoad(q.arg2, Reg.T1);
+
+        mw.fois4(r1);
+        mw.plus(r0, r1);
+
+        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
+        mw.storeOffset(r, 4, r0);
+
+        pop(Reg.T0, Reg.T1);
+    }
+
+    @Override
+    public void visit(final QCopy q) {
+        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
+        this.regStore(r, q.result);
     }
 
     @Override
@@ -63,7 +85,7 @@ public class ToMipsPlus extends ToMips {
                 break;
         }
 
-        this.regStore(Reg.V0, q.result);
+        this.regStore(r0, q.result);
     }
 
     @Override
