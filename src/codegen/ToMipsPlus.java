@@ -23,6 +23,12 @@ public class ToMipsPlus extends ToMips {
     }
 
     @Override
+    public void visit(final QJumpCond q) {
+        Reg r = this.tmpRegLoad(q.arg2, Reg.V0);
+        mw.jumpIfNot(r, q.arg1.getName());
+    }
+
+    @Override
     public void visit(QAssign q) {
         Reg r0 = tmpRegLoad(q.arg1, Reg.V0);
         Reg r1 = tmpRegLoad(q.arg2, Reg.V1);
