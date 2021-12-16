@@ -53,6 +53,8 @@ public class Semantic {
       Debug.log(semanticTree.rootScope.getAllVariables());
     }
 
+    final UndefinedAndUnused _uau = new UndefinedAndUnused(semanticTree);
+
     // Controle de Type et calcul de l'attribut nodeType
     final TypeChecking tc = new TypeChecking(semanticTree);
     error = tc.getError() || error;
