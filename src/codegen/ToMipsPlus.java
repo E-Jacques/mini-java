@@ -22,88 +22,49 @@ public class ToMipsPlus extends ToMips {
         return r;
     }
 
-    @Override
-    public void visit(final QJumpCond q) {
-        Reg r = this.tmpRegLoad(q.arg2, Reg.V0);
-        mw.jumpIfNot(r, q.arg1.getName());
-    }
+    // @Override
+    // public void visit(final QJumpCond q) {
+    //     Reg r = this.tmpRegLoad(q.arg2, Reg.V0);
+    //     mw.jumpIfNot(r, q.arg1.getName());
+    // }
 
-    @Override
-    public void visit(final QAssignUnary q) {
-        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
-        if (q.op == main.EnumOper.NOT) {
-            mw.not(r);
-        }
+    // @Override
+    // public void visit(final QAssignUnary q) {
+    //     Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
+    //     if (q.op == main.EnumOper.NOT) {
+    //         mw.not(r);
+    //     }
 
-        this.regStore(r, q.result);
-    }
+    //     this.regStore(Reg.V0, q.result);
+    // }
 
-    @Override
-    public void visit(final QAssignArrayTo q) {
-        push(Reg.T0, Reg.T1);
+    // @Override
+    // public void visit(QAssign q) {
+    //     Reg r0 = tmpRegLoad(q.arg1, Reg.V0);
+    //     Reg r1 = tmpRegLoad(q.arg2, Reg.V1);
 
-        Reg r0 = this.tmpRegLoad(q.result, Reg.T0);
-        Reg r1 = this.tmpRegLoad(q.arg2, Reg.T1);
+    //     switch (q.op) {
+    //         case PLUS:
+    //             mw.plus(r0, r1);
+    //             break;
+    //         case TIMES:
+    //             mw.fois(r0, r1);
+    //             break;
+    //         case MINUS:
+    //             mw.moins(r0, r1);
+    //             break;
+    //         case AND:
+    //             mw.et(r0, r1);
+    //             break;
+    //         case LESS:
+    //             mw.inferieur(r0, r1);
+    //             break;
+    //         default:
+    //             break;
+    //     }
 
-        mw.fois4(r1);
-        mw.plus(r0, r1);
-
-        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
-        mw.storeOffset(r, 4, r0);
-
-        pop(Reg.T0, Reg.T1);
-    }
-
-    @Override
-    public void visit(final QAssignArrayFrom q) {
-        push(Reg.T0, Reg.T1);
-
-        Reg r0 = this.tmpRegLoad(q.arg1, Reg.T0);
-        Reg r1 = this.tmpRegLoad(q.arg2, Reg.T1);
-
-        mw.fois4(r1);
-        mw.plus(r0, r1);
-
-        Reg r = this.tmpReg(q.arg1, Reg.V0);
-        mw.loadOffset(r, 4, r1);
-        this.regStore(r, q.result);
-
-        pop(Reg.T0, Reg.T1);
-    }
-
-    @Override
-    public void visit(final QCopy q) {
-        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
-        this.regStore(r, q.result);
-    }
-
-    @Override
-    public void visit(QAssign q) {
-        Reg r0 = tmpRegLoad(q.arg1, Reg.V0);
-        Reg r1 = tmpRegLoad(q.arg2, Reg.V1);
-
-        switch (q.op) {
-            case PLUS:
-                mw.plus(r0, r1);
-                break;
-            case TIMES:
-                mw.fois(r0, r1);
-                break;
-            case MINUS:
-                mw.moins(r0, r1);
-                break;
-            case AND:
-                mw.et(r0, r1);
-                break;
-            case LESS:
-                mw.inferieur(r0, r1);
-                break;
-            default:
-                break;
-        }
-
-        this.regStore(r0, q.result);
-    }
+    //     this.regStore(r0, q.result);
+    // }
 
     @Override
     public void visit(final QCall q) throws CompilerException {
