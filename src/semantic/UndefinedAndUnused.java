@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import main.CompilerException;
-import semantic.symtab.InfoVar;
 import semantic.symtab.Scope;
 import syntax.ast.*;
 

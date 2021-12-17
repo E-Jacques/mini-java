@@ -353,7 +353,7 @@ public class ToMips extends IRvisitorDefault {
 
   @Override
   public void visit(final QNewArray q) {
-    push(Reg.A0);
+    push(Reg.A0, Reg.T0);
 
     this.regLoad(Reg.A0, q.arg2);
     mw.fois4(Reg.A0);
@@ -362,7 +362,10 @@ public class ToMips extends IRvisitorDefault {
     mw.jumpIn("_new_object");
     this.regStore(Reg.V0, q.result);
 
-    pop(Reg.A0);
+    this.regLoad(Reg.T0, q.arg2);
+    mw.storeOffset(Reg.T0, 0, Reg.V0);
+
+    pop(Reg.A0, Reg.T0);
   }
 
   @Override
@@ -370,7 +373,7 @@ public class ToMips extends IRvisitorDefault {
     push(Reg.T0);
 
     this.regLoad(Reg.T0, q.arg1);
-    mw.loadOffset(Reg.V0, 4, Reg.T0);
+    mw.loadOffset(Reg.V0, 0, Reg.T0);
     this.regStore(Reg.V0, q.result);
 
     pop(Reg.T0);

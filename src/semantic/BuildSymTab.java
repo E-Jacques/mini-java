@@ -3,7 +3,6 @@ package semantic;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.CompilerException;
 import main.Debug;
 import semantic.symtab.*;
 import syntax.ast.*;

@@ -1,12 +1,9 @@
 package semantic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import main.CompilerException;
 import main.EnumOper;
-import main.EnumType;
 import semantic.symtab.*;
 import syntax.ast.*;
 
@@ -215,14 +212,12 @@ public class TypeChecking extends AstVisitorDefault {
   }
 
   @Override
-  public void visit(final ExprIdent n) throws CompilerException {
+  public void visit(final ExprIdent n) {
     defaultVisit(n);
     // if (n.varId.name == "this") {
     // setType(n, this.currentKlass.getName());
     // } else {
     String t = lookupVarType(n, n.varId.name);
-    if (t == "undef")
-      throw new CompilerException("'" + n.varId.name + "' is not defined");
     setType(n, t);
     // }
   }
@@ -271,7 +266,7 @@ public class TypeChecking extends AstVisitorDefault {
   }
 
   @Override
-  public void visit(final ExprCall n) throws CompilerException {
+  public void visit(final ExprCall n) {
     defaultVisit(n);
     InfoKlass ik = this.semanticTree.rootScope.lookupKlass(getType(n.receiver));
     InfoMethod m = ik.getScope().lookupMethod(n.methodId.name);
