@@ -28,15 +28,15 @@ public class ToMipsPlus extends ToMips {
         mw.jumpIfNot(r, q.arg1.getName());
     }
 
-    // @Override
-    // public void visit(final QAssignUnary q) {
-    //     Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
-    //     if (q.op == main.EnumOper.NOT) {
-    //         mw.not(r);
-    //     }
+    @Override
+    public void visit(final QAssignUnary q) {
+        Reg r = this.tmpRegLoad(q.arg1, Reg.V0);
+        if (q.op == main.EnumOper.NOT) {
+            mw.not(r);
+        }
 
-    //     this.regStore(Reg.V0, q.result);
-    // }
+        this.regStore(Reg.V0, q.result);
+    }
 
     // @Override
     // public void visit(QAssign q) {
