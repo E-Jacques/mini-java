@@ -1,30 +1,28 @@
-// milestone 9 : tableaux d'entiers
-class Test109 {
-  public static void main(String[] args) {
-    System.out.println(new Test2().Start(0)); // Prints 3 (length)
+// Expressions et Variables
+class Test202 {
+  public static void main(String[] a) {
+    System.out.println(new Operator().compute()); // => 42
   }
 }
 
-class Test2 extends Test3 {
-  int d;
-  int[] e;
+class Operator {
+  boolean b1;
+  boolean b2;
+  boolean b;
+  int i1;
+  int i2;
+  int i;
 
-  public int Start(int y) {
-    e = new int[3];
-    a = 3;
-    d = 4;
-    e[0] = 1;
-    e[1] = 3;
-    e[2] = e[0] + e[1];
-    return e.length;
+  public int compute() {
+    b1 = true;
+    b2 = false;
+    i1 = 6;
+    i2 = 7;
+    b = !(!b2 && (i1 < i2));
+    if (b)
+      i = i1 + i2;
+    else
+      i = i1 + i1 * i2 - i2 + 1;
+    return i;
   }
-}
-
-class Test3 extends Test4 {
-  int b;
-  boolean c;
-}
-
-class Test4 {
-  int a;
 }

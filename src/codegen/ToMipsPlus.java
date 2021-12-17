@@ -22,11 +22,11 @@ public class ToMipsPlus extends ToMips {
         return r;
     }
 
-    // @Override
-    // public void visit(final QJumpCond q) {
-    //     Reg r = this.tmpRegLoad(q.arg2, Reg.V0);
-    //     mw.jumpIfNot(r, q.arg1.getName());
-    // }
+    @Override
+    public void visit(final QJumpCond q) {
+        Reg r = this.tmpRegLoad(q.arg2, Reg.V0);
+        mw.jumpIfNot(r, q.arg1.getName());
+    }
 
     // @Override
     // public void visit(final QAssignUnary q) {
