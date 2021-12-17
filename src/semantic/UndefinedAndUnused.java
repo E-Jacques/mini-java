@@ -38,7 +38,7 @@ public class UndefinedAndUnused extends AstVisitorDefault {
         for (AstNode v : n.vars) {
             String varName = ((Var) v).varId.name;
             if (!klassVisitedVars.contains(varName)) {
-                System.out.println("[WARNING] " + varName + " is never used in " + n.klassId.name);
+                System.out.println("\u001B[33m" + "[WARNING] " + varName + " is never used in " + n.klassId.name + "\u001B[0m");
             }
         }
     }
@@ -56,7 +56,7 @@ public class UndefinedAndUnused extends AstVisitorDefault {
         for (AstNode v : n.vars) {
             String varName = ((Var) v).varId.name;
             if (!methodVisitedVars.contains(varName)) {
-                System.out.println("[WARNING] " + varName + " is never used in " + n.methodId.name);
+                System.out.println("\u001B[33m" + "[WARNING] " + varName + " is never used in " + n.methodId.name + "\u001B[0m");
             }
 
         }
@@ -64,7 +64,7 @@ public class UndefinedAndUnused extends AstVisitorDefault {
         for (AstNode v : n.fargs) {
             String varName = ((Formal) v).varId.name;
             if (!methodVisitedVars.contains(varName)) {
-                System.out.println("[WARNING] " + varName + " is never used in " + n.methodId.name);
+                System.out.println("\u001B[33m" + "[WARNING] " + varName + " is never used in " + n.methodId.name + "\u001B[0m");
             }
 
         }

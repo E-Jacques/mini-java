@@ -1,26 +1,30 @@
-// milestone 4 classes et méthodes (complet)
-class Test104 {
+// milestone 9 : tableaux d'entiers
+class Test109 {
   public static void main(String[] args) {
-    System.out.println(new Test3().Start(6, 7));
+    System.out.println(new Test2().Start(0)); // Prints 3 (length)
   }
 }
 
-class Test2 {
-  int a;
+class Test2 extends Test3 {
+  int d;
+  int[] e;
 
-  public int Start(int i, int j) {
-    int k;
-    return i * j * k;
+  public int Start(int y) {
+    e = new int[3];
+    a = 3;
+    d = 4;
+    e[0] = 1;
+    e[1] = 3;
+    e[2] = e[0] + e[1];
+    return e.length;
   }
+}
 
-  public int un() { return 1; }
-
+class Test3 extends Test4 {
   int b;
+  boolean c;
 }
 
-
-class Test3 extends Test2 {
-  public int zero() {
-    return 0;
-  }
+class Test4 {
+  int a;
 }
