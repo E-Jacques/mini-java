@@ -76,7 +76,6 @@ public class ToMipsPlus extends ToMips {
         }
 
         int frameSize = allocator.frameSize(methodName);
-        System.out.println(methodName);
         this.callerSave();
         for (int i = NBARGS; i < nbArg; i++) {
             int sizeIdx = i - NBARGS;
