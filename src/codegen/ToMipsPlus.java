@@ -68,13 +68,14 @@ public class ToMipsPlus extends ToMips {
 
     @Override
     public void visit(final QAssignArrayFrom q) {
-        push(Reg.T0, Reg.T1, Reg.T2, Reg.T3);
+        push(Reg.T0, Reg.T1, Reg.T2, Reg.T3, Reg.A0);
 
         this.regLoad(Reg.T0, q.arg1);
         this.regLoad(Reg.T1, q.arg2);
 
         mw.loadOffset(Reg.T2, 0, Reg.T0);
         mw.inRange(Reg.T3, Reg.T1, Reg.T2);
+        mw.load(Reg.A0, 404);
         mw.jumpIfNot(Reg.T3, "_system_exit");
 
         mw.fois4(Reg.T1);
@@ -83,7 +84,7 @@ public class ToMipsPlus extends ToMips {
         mw.loadOffset(Reg.V0, 4, Reg.T0);
         this.regStore(Reg.V0, q.result);
 
-        pop(Reg.T0, Reg.T1, Reg.T2, Reg.T3);
+        pop(Reg.T0, Reg.T1, Reg.T2, Reg.T3, Reg.A0);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class ToMipsPlus extends ToMips {
 
         mw.loadOffset(Reg.T2, 0, Reg.T0);
         mw.inRange(Reg.T3, Reg.T1, Reg.T2);
-        mw.load(Reg.A0, 10);
+        mw.load(Reg.A0, 404);
         mw.jumpIfNot(Reg.T3, "_system_exit");
 
         mw.fois4(Reg.T1);
