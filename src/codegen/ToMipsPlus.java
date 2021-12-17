@@ -34,37 +34,8 @@ public class ToMipsPlus extends ToMips {
         if (q.op == main.EnumOper.NOT) {
             mw.not(r);
         }
-
         this.regStore(Reg.V0, q.result);
     }
-
-    // @Override
-    // public void visit(QAssign q) {
-    //     Reg r0 = tmpRegLoad(q.arg1, Reg.V0);
-    //     Reg r1 = tmpRegLoad(q.arg2, Reg.V1);
-
-    //     switch (q.op) {
-    //         case PLUS:
-    //             mw.plus(r0, r1);
-    //             break;
-    //         case TIMES:
-    //             mw.fois(r0, r1);
-    //             break;
-    //         case MINUS:
-    //             mw.moins(r0, r1);
-    //             break;
-    //         case AND:
-    //             mw.et(r0, r1);
-    //             break;
-    //         case LESS:
-    //             mw.inferieur(r0, r1);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-
-    //     this.regStore(r0, q.result);
-    // }
 
     @Override
     public void visit(final QCall q) throws CompilerException {
