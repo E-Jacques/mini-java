@@ -1,5 +1,5 @@
 // Tableaux de booléens
-class Test209 {
+class Test219 {
   public static void main(String[] a) {
     System.out.println(new Test().test()); // 42
   }

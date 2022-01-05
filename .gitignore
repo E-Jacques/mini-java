@@ -2,6 +2,5 @@ bin
 Docs
 lib
 input.mips
-test.py
 testtmp.txt
 input.txt

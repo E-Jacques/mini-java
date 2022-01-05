@@ -1,5 +1,5 @@
 // Tableaux d'entiers
-class Test219 {
+class Test209 {
   public static void main(String[] a) {
     {
       System.out.println(new Test1().start()); // 42
