@@ -31,18 +31,6 @@ class CompilationError (Exception):
     def __str__(self) -> str:
         return "Compilation Error : " + self.message
 
-class RaiseWrongCompilationError (Exception):
-    def __init__(self, actual: str, excpected: str) -> None:
-        self.message = f"""
-Actual: {actual}
-Expected: {excpected}
-"""
-
-    def __str__(self) -> str:
-        return "[RaiseWrongCompilationError Error]\n" + self.message
-
-class ExpectedToRaiseCompilationErrror(Exception): ...
-
 
 def clean_output_dir(dir: str) -> None:
     """
@@ -141,31 +129,9 @@ def test_all_files(dir: str) -> None:
         print("Testing " + program_path + " ...")
         check_if_output_is_correct(program_path=program_path)
 
-
-def test_error(program_path: str, expected_error: str) -> None:
-    """
-    Test if the program output an compilation aborded
-    """
-
-    copy_file_content(program_path, "input.txt")
-    compiler_output = get_compiler_output()
-
-    try:
-        check_if_compilation_error(compiler_output)
-        raise ExpectedToRaiseCompilationErrror()
-    except CompilationError as e:
-        if (e.type != expected_error):
-            raise RaiseWrongCompilationError(e.type, expected_error)
-
 if __name__ == "__main__":
     test_all_files(join("Exemples", "Milestone"))
     test_all_files(join("Exemples", "Modern"))
     test_all_files(join("Exemples", "Running"))
-
-    test_error(join("Exemples", "SemanticError", "Test401.java"), "Semantic Error(s)\n")
-    test_error(join("Exemples", "SemanticError", "Test402.java"), "Semantic Error(s)\n")
-    test_error(join("Exemples", "SemanticError", "Test403.java"), "Semantic Error(s)\n")
-    test_error(join("Exemples", "SemanticError", "Test405.java"), "Semantic Error(s)\n")
-    test_error(join("Exemples", "SemanticError", "Test409.java"), "Semantic Error(s)\n")
 
     print("✅ All tests passed")

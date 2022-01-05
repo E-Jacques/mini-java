@@ -12,6 +12,10 @@ Outillage : Make ou Ant, Eclipse (ou Intellij).
 - Site du Cours : CSC4536  
   <http://www-inf.telecom-sudparis.eu/COURS/CSC4536/web/> 
 
+## Author
+
+Emilien JACQUES
+
 # Version "Start"
 Version de départ fournie aux élèves pour le projet Minijava.
 
