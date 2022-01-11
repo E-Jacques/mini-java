@@ -91,6 +91,7 @@ def parse_compiler_output(output: str) -> Tuple[str, str]:
     exit_status_header = "Exit status "
 
     mips_output = output.split(mips_header)[1].split(exit_status_header)[0]
+    print(output)
     exit_status = output.split(exit_status_header)[1]
 
     return (mips_output, exit_status.strip())
