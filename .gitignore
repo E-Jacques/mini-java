@@ -4,3 +4,4 @@ lib
 input.mips
 testtmp.txt
 input.txt
+*.tar.*
